@@ -3,11 +3,24 @@ import { TaskContext } from "../context/TaskContext";
 
 function TaskForm() {
   const [taskName, setTaskName] = useState("");
+  const { setTasks } = useContext(TaskContext);
 
   function handleSubmit(e) {
     e.preventDefault();
     if (taskName.trim() === "") return;
-    setTaskName("");
+
+    fetch("http://localhost:6001/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title: taskName, completed: false }),
+    })
+      .then((r) => r.json())
+      .then((newTask) => {
+        setTasks((prevTasks) => [...prevTasks, newTask]);
+        setTaskName("");
+      });    
   }
 
   return (
