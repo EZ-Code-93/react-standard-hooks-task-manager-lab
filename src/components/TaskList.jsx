@@ -1,28 +1,12 @@
 import React, { useContext } from "react";
 import { TaskContext } from "../context/TaskContext";
 
-function TaskList({query}) {
-    const { tasks, setTasks } = useContext(TaskContext);
+function TaskList({ query }) {
+  const { tasks, handleToggle } = useContext(TaskContext);
 
-    const filteredTasks = tasks.filter((task) =>
+  const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(query.toLowerCase())
   );
-
-  function handleToggle(task) {
-    fetch(`http://localhost:6001/tasks/${task.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ completed: !task.completed }),
-    })
-      .then((r) => r.json())
-      .then((updatedTask) => {
-        setTasks((prevTasks) =>
-          prevTasks.map((t) => (t.id === task.id ? updatedTask : t))
-        );
-      });
-  }
 
   return (
     <ul>
@@ -41,3 +25,4 @@ function TaskList({query}) {
 }
 
 export default TaskList;
+
